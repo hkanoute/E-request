@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Repository\T001Repository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,8 +13,8 @@ class IndexController extends AbstractController
     #[Route('/', name: 'app_index')]
     public function index(): Response
     {
-        return $this->render('index/index.html.twig', [
 
+        return $this->render('index/index.html.twig', [
         ]);
     }
 
@@ -30,6 +31,15 @@ class IndexController extends AbstractController
     {
         return $this->render('index/hernr.html.twig', [
 
+        ]);
+    }
+
+    #[Route('/test', name: 'app_test')]
+    public function app_test(T001Repository $t001Repository): Response
+    {
+        $test = $t001Repository->findAll();
+        return $this->render('index/tableau.html.twig', [
+            "tests" => $test
         ]);
     }
 }
