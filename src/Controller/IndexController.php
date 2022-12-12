@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Repository\T001Repository;
+use App\Repository\T100Repository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -35,11 +36,16 @@ class IndexController extends AbstractController
     }
 
     #[Route('/test', name: 'app_test')]
-    public function app_test(T001Repository $t001Repository): Response
+    public function app_test(T001Repository $t001Repository, T100Repository $t100Repository): Response
     {
-        $test = $t001Repository->findAll();
+        $allData = [];
+
+        $datas [] = $t001Repository->findoneBy([
+            'dlnr' => '0001'
+        ]);
+
+
         return $this->render('index/tableau.html.twig', [
-            "tests" => $test
         ]);
     }
 }
