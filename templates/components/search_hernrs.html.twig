@@ -1,0 +1,30 @@
+<div{{ attributes }} class="d-flex justify-content-center text-center pt-5">
+    <div class="justify-content-center">
+        <label>
+            <input
+                    class="form-control text-center"
+                    type="search"
+                    data-model="query"
+                    placeholder="Marque"
+            >
+        </label>
+        <div class="pt-5"></div>
+        <div class=" justify-content-center pt-5 scrollable-parent">
+
+            <div data-loading="addClass(opacity-50)" class="scrollable-child">
+                {% for hernr in this.hernrs %}
+                    <div>
+                        {{ component('hernr', {
+                            hkz: hernr.hkz,
+                            hernr: hernr.hernr
+                        })}}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
