@@ -38,7 +38,7 @@ class IndexController extends AbstractController
         ]);
     }
 
-    #[Route('/test', name: 'app_genartnr')]
+    #[Route('/genartnr', name: 'app_genartnr')]
     public function app_test(T020Repository $t020Repository, Request $request, EntityManagerInterface $em): Response
     {
         $dataToSend = [];
@@ -71,10 +71,6 @@ class IndexController extends AbstractController
             foreach ($genartnr as $value) {
                 $value['sprachnr'] === $sprachnr ? $dataLang1[] = $value : $dataLang2 [] = $value;
             }
-
-
-            dump($genartnr);
-            dump($dataLang1, $dataLang2);
 
             return $this->render('index/genartnr.html.twig', [
                 'designationLanguage' => $designationLanguage,
