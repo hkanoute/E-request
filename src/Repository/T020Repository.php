@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\T020;
+use App\Entity\T030;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,26 @@ class T020Repository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getBez()
+    {
+        return $this->createQueryBuilder('t020')
+            ->innerJoin(T030::class, 't030', Join::WITH, 't030.beznr = t020.beznr')
+            ->where("t030.sprachnr ='006'")
+            ->select('t030.bez')
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getDesignation( mixed $designation) {
+        return $this->createQueryBuilder('t020')
+            ->innerJoin(T030::class, 't030', Join::WITH, 't030.beznr = t020.beznr')
+            ->where("t030.bez in (:designation)")
+            ->select('t020.sprachnr', 't030.bez')
+            ->setParameter('designation', $designation)
+            ->getQuery()
+            ->execute();
     }
 
 //    /**
