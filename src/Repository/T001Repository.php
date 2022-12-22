@@ -7,6 +7,7 @@ use App\Entity\T030;
 use App\Entity\T211;
 use App\Entity\T320;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -44,7 +45,8 @@ class T001Repository extends ServiceEntityRepository
     }
 
     /**
-     * @return T001[] Returns an array of T001 objects
+     * @param string|null $query
+     * @return array Returns an array of T001 objects
      */
     public function findByQuery(string|null $query): array
     {
@@ -66,11 +68,11 @@ class T001Repository extends ServiceEntityRepository
     }
 
     /**
-     * @param mixed $dlnr
-     * @param mixed $designationLanguage
+     * @param ArrayCollection $dlnr
+     * @param array $designationLanguage
      * @return array
      */
-    public function findByGenartnr(mixed $dlnr, mixed $designationLanguage): array
+    public function findByGenartnr(ArrayCollection $dlnr, Array $designationLanguage): array
     {
         return $this->createQueryBuilder('t001')
             ->distinct()

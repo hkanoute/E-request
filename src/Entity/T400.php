@@ -69,7 +69,7 @@ class T400
      * @ORM\ManyToOne(targetEntity="T200")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="artnr", referencedColumnName="artnr"),
-     *   @ORM\JoinColumn(name="dlnr", referencedColumnName="dlnr")
+     *
      * })
      */
     private $artnr;
@@ -77,6 +77,29 @@ class T400
     public function getArtnrDlnrGenartnrVknzielartVknzielnrLfdnr(): ?string
     {
         return $this->artnrDlnrGenartnrVknzielartVknzielnrLfdnr;
+    }
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dlnr", type="string", length=3, nullable=false)
+     */
+    private  $dlnr;
+
+    /**
+     * @return string|null
+     */
+    public function getDlnr(): ?string
+    {
+        return $this->dlnr;
+    }
+
+    /**
+     * @param string|null $dlnr
+     */
+    public function setDlnr(?string $dlnr): void
+    {
+        $this->dlnr = $dlnr;
     }
 
     public function getVknzielnr(): ?int

@@ -1,28 +1,28 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Autocomplete;
 
-use App\Entity\T001;
+use App\Entity\T200;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
-use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
+use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 
 #[AsEntityAutocompleteField]
-class T001Autocomplete extends AbstractType
+class T200Autocomplete extends AbstractType
 {
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'label' => 'Veuillez choisir au moins un dlnr',
-            "choice_label" => 'marke',
-            'multiple' => true,
+            'label' => 'Veuillez choisir un dlnr',
+            "choice_label" => 'artnr',
+            'multiple' => false,
             'constraints' => [
-                new Count(min: 1, minMessage: 'We need to eat *something*'),
+                new Count(min: 1, minMessage: 'Veuillez selectonner au moins un artnr'),
             ],
-           'class' => T001::class
+           'class' => T200::class
         ]);
     }
 

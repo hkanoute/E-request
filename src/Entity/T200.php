@@ -24,7 +24,7 @@ class T200
 
     /**
      * @var string
-     *
+     * @ORM\ManyToOne(targetEntity="T200")
      * @ORM\Column(name="dlnr", type="string", length=4, nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")

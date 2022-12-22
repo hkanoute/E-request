@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Form\Autocomplete\T001Autocomplete;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,6 +18,7 @@ class T001Type extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->data = $options['data'];
+
         $builder
             ->add('dlnr', T001Autocomplete::class)
             ->add('designation', ChoiceType::class, [
@@ -36,7 +38,7 @@ class T001Type extends AbstractType
                     'class' => 'mt-3'
                 ]
             ])
-            ->add('', SubmitType::class, [
+            ->add('Valider', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary mt-3'
                 ]

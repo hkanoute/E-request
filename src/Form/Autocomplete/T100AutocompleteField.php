@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Autocomplete;
 
 use App\Entity\T100;
-use App\Repository\T100Repository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;

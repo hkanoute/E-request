@@ -8,7 +8,7 @@
     </div>
 </div>
 
-{% if genartnr is defined and designationLanguage is defined %}
+{% if genartnr is defined and designationLanguage is defined and genartnr | length > 0 %}
     <div class="container col-md-8">
         <table class="table pt-5 mt-5" id="TableToExport">
             <thead>
@@ -36,13 +36,13 @@
             </tbody>
         </table>
     </div>
+{% endif %}
     <script>
         document.getElementById("sheetjsexport").addEventListener('click', function() {
             /* Create worksheet from HTML DOM TABLE */
             let wb = XLSX.utils.table_to_book(document.getElementById("TableToExport"));
             /* Export to file (start a download) */
-            XLSX.writeFile(wb, "Export.xlsx");
+            XLSX.writeFile(wb, "Genartnr.xlsx");
         });
     </script>
-{% endif %}
 {% endblock %}

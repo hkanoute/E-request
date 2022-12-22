@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container text-center d-flex justify-content-center">
+        <div class="col-md-3 pt-5">
+            {{ form(form) }}
+            <datalist id="t203_choice">
+            </datalist>
+            <button class="mt-3 btn btn-success" id="sheetjsexport"><b>Exporter</b></button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("sheetjsexport").addEventListener('click', function () {
+            /* Create worksheet from HTML DOM TABLE */
+            let wb = XLSX.utils.table_to_book(document.getElementById("TableToExport"));
+            /* Export to file (start a download) */
+            XLSX.writeFile(wb, "ExtractionVehicule.xlsx");
+        });
+
+
+        window.onload = () => {
+            let datalist = document.getElementById('t203_choice')
+            let fournisseur = document.getElementById('t203_Fournisseur')
+
+            fournisseur.value = '3'
+            datalist.innerHTML = ''
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let fournisseur = document.getElementById('t203_Fournisseur')
+            let marque = document.getElementById('t203_Marque')
+            let datalist = document.getElementById('t203_choice')
+
+            marque.disabled = true;
+
+            fournisseur.addEventListener('input', async () => {
+
+                if (fournisseur.value !== '3') {
+
+                    let request = fetch('/api/fournisseur/' + fournisseur.value)
+                    let response = (await request).json()
+                    let result = await response
+
+                    datalist.innerHTML = ''
+
+                    result.forEach(element => {
+                        datalist.appendChild(new Option(element.hkz, element.hkz))
+                    });
+
+                    marque.disabled = false;
+
+                } else {
+                    marque.disabled = true;
+                }
+
+            })
+        })
+    </script>
+{% endblock %}
+
+
+
