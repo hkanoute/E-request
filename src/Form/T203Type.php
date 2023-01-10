@@ -29,7 +29,7 @@ class T203Type extends AbstractType
             ->add('Fournisseur', ChoiceType::class, [
                 'label' => 'Veuillez choisir le type de fournisseur',
                 'choices' => [
-                    'Veuillez choisir une marque' => '3',
+                    'Veuillez choisir le type de fournisseur' => '3',
                     'Equipementier' => '1',
                     'Constructeur' => '0',
                 ],

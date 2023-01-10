@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\T001;
+use App\Entity\T012;
 use App\Entity\T030;
 use App\Entity\T100;
 use App\Entity\T200;
@@ -16,6 +17,7 @@ use App\Form\T001Type;
 use App\Form\T200Type;
 use App\Form\T203Type;
 use App\Repository\T001Repository;
+use App\Repository\T012Repository;
 use App\Repository\T020Repository;
 use App\Repository\T100Repository;
 use App\Repository\T203Repository;
@@ -133,18 +135,25 @@ class IndexController extends AbstractController
     }
 
     #[Route('/api/fournisseur/{type}', name: 'app_get_fournisseur', methods: ['GET'])]
-    public function getFournisseur(T100Repository $t203Repository, Request $request, string $type): Response
+    public function getFournisseur(T012Repository $t012Repository, string $type): Response
     {
-        dump($type);
 
-        return $this->json($t203Repository->findBy([
-            'vgl' => $type])
-        );
+
+        return $this->json($t012Repository->createQueryBuilder('t012')
+            ->from(T100::class, 't100')
+            ->distinct()
+            ->select('t012.bez')
+            ->where("t012.sprachnr = '006'")
+            ->andWhere('t012.lbeznr = t100.lbeznr')
+            ->andWhere('t100.vgl = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getResult());
     }
 
 
     #[Route('/croissement', name: 'app_croissement')]
-    public function croissement(T203Repository $t001Repository, Request $request, EntityManagerInterface $em): Response
+    public function croissement(T203Repository $t203Repository, Request $request, EntityManagerInterface $em): Response
     {
 
 
@@ -152,51 +161,24 @@ class IndexController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $t001 = $form->get('dlnr')->getData();
-            $pkw = $form->get('Fournisseur')->getData();
-            $marke = $form->get('Marque')->getData();
+            $dlnr = $form->get('dlnr')->getData();
 
-            $genart = $em->getRepository(T211::class)->findOneBy(['dlnr' => $t001[0]->getDlnr()]);
+            $vgl = $form->get('Fournisseur')->getData();
+            $hkz = $form->get('Marque')->getData();
+            $lbeznr = $em->getRepository(T012::class)->findOneBy(['bez' => $hkz]);
 
+            $marke = $em->getRepository(T100::class)->findBy(
+                [
+                    'lbeznr' => $lbeznr->getLbeznr(),
+                ]
+            );
 
-           /* $data = $t001Repository->createQueryBuilder('t203')
-                ->distinct()
-                ->select('t001.marke', 't203.dlnr', 'IDENTITY(t203.artnr) as artnr', 't320.genartnr as genartnr')
-                ->addSelect('famgeneq.bez as designation', 't100.hkz as marque', 't203.refnr as refnr')
-                ->from(T001::class, 't001')
-                ->from(T320::class, 't320')
-                ->from(T030::class, 'famnarteq')
-                ->from(T030::class, 'famgeneq')
-                ->from(T100::class, 't100')
-                ->from(T211::class, 't211')
-                ->from(T323::class, 't323')
-                ->where('t211.artnr = t203.artnr')
-                ->andWhere("famgeneq.sprachnr = '006'")
-                ->andWhere("famnarteq.sprachnr = '006'")
-                ->andWhere('t211.dlnr = t203.dlnr')
-                ->andWhere('t211.genartnr = t320.genartnr')
-                ->andWhere('t320.beznr = famgeneq.beznr')
-                ->andWhere('t323.beznr = famnarteq.beznr')
-                ->andWhere('t320.nartnr = t323.nartnr')
-                ->andWhere('t001.dlnr = t203.dlnr')
-                ->andWhere('t100.hernr = t203.khernr')
-                ->andWhere('t320.genartnr = :genartnr')
-                ->andWhere('t203.dlnr  = :dlnr')
-                ->andWhere('t100.pkw = :pkw')
-                ->andWhere('t100.hkz = :marke')
-                ->setParameter('marke', $marke)
-                ->setParameter('genartnr', $genart->getGenartnr())
-                ->setParameter('dlnr', $t001[0]->getDlnr())
-                ->setParameter('pkw', $pkw)
-                ->getQuery()
-                ->getResult();*/
-
-            dump( $pkw, $marke, $genart, $t001[0]->getDlnr());
+            $data = $t203Repository->croissement($marke,$dlnr,$vgl);
 
 
             return $this->render('index/croissement.html.twig', [
                 'form' => $form->createView(),
-                //'data' => $data,
+                'croissement' => $data,
             ]);
         }
 
