@@ -3,7 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\T001;
+use App\Entity\T030;
+use App\Entity\T211;
+use App\Entity\T320;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,49 +45,49 @@ class T001Repository extends ServiceEntityRepository
     }
 
     /**
-     * @return T001[] Returns an array of T001 objects
-    */
-    public function findByQuery(string | null  $query): array
+     * @param string|null $query
+     * @return array Returns an array of T001 objects
+     */
+    public function findByQuery(string|null $query): array
     {
 
 
-        if(gettype($query) === "NULL") {
+        if (gettype($query) === "NULL") {
             return $this->findAll();
         }
 
         $query = strtoupper($query);
 
         return $this->createQueryBuilder('t')
-            ->select('t.marke','t.dlnr','t.khernr')
+            ->select('t.marke', 't.dlnr', 't.khernr')
             ->andWhere('t.marke LIKE :query')
-            ->setParameter('query','%'.$query.'%')
+            ->setParameter('query', '%' . $query . '%')
             ->orderBy('t.marke', 'ASC')
             ->getQuery()
-            ->getResult()
-
-        ;
+            ->getResult();
     }
 
     /**
-     * @return [] Returns an array of T001 objects
+     * @param ArrayCollection $dlnr
+     * @param array $designationLanguage
+     * @return array
      */
-    public function findByGenartnr(string | null  $query): array
+    public function findByGenartnr(ArrayCollection $dlnr, Array $designationLanguage): array
     {
-
-        $query = strtoupper($query);
-
-        return $this->createQueryBuilder('t')
-            ->distinct(true)
-            ->from('App:T211','t211')
-            ->from('App:T320', 't320')
-            ->from('App:T030', 't030')
-            ->select('t.marke','t.dlnr','t320.genartr', '')
-            ->andWhere('t.marke LIKE :query')
-            ->setParameter('query','%'.$query.'%')
-            ->orderBy('t.marke', 'ASC')
+        return $this->createQueryBuilder('t001')
+            ->distinct()
+            ->innerJoin(T211::class, 't211', Join::WITH, 't211.dlnr = t001.dlnr')
+            ->innerJoin(T320::class, 't320', Join::WITH, 't320.genartnr = t211.genartnr')
+            ->innerJoin(T030::class, 't030', Join::WITH, 't030.beznr = t320.beznr')
+            ->select('t001.marke', 't211.dlnr', 't320.genartnr', 't030.bez', 't030.sprachnr')
+            ->where('t211.dlnr IN (:dlnr)')
+            ->andWhere('t030.sprachnr in (:sprachnr)')
+            ->setParameter('dlnr', $dlnr)
+            ->setParameter('sprachnr', $designationLanguage)
+            ->orderBy('t030.sprachnr', 'ASC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->execute();
+
     }
 
 //    public function findOneBySomeField($value): ?T001

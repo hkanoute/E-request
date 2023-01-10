@@ -18,16 +18,31 @@
     <link href="{{ asset('assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
 
 
-
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}
+        <script src="{{ asset('assets/js/http_cdn.sheetjs.com_xlsx-latest_package_dist_xlsx.full.min.js') }}"></script>
     {% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
+<main id="main">
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-title">
+                <a href="{{ path('app_index') }}"><h2>E-request</h2></a>
+                {% set url = app.request.attributes.get('_route') %}
+                 {%  if url is same as "app_index" %}
+                <p>
+                    Bienvenue sur E-request ! Veuillez choisir le type de requête que vous voulez exécuter :
+                </p>
+                {% endif %}
+            </div>
+            {% block body %}{% endblock %}
+        </div>
+    </section>
+</main>
 </body>
 </html>

@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container text-center d-flex justify-content-center">
+    <div class="col-md-3 pt-5">
+        {{ form(form) }}
+        <button class="mt-3 btn btn-success" id="sheetjsexport"><b>Exporter</b></button>
+    </div>
+</div>
+
+{% if genartnr is defined and designationLanguage is defined and genartnr | length > 0 %}
+    <div class="container col-md-8">
+        <table class="table pt-5 mt-5" id="TableToExport">
+            <thead>
+            <tr>
+                <th scope="col">Marque</th>
+                <th scope="col">Dlnr</th>
+                <th scope="col">Genartnr</th>
+                {% for language in designationLanguage %}
+                    <th scope="col"> Designation {{ language.bez }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {%for i in 0..(genartnr | length - 1 ) / 2 %}
+                <tr>
+                    <td>{{genartnr[i].marke }}</td>
+                    <td>{{ genartnr[i].dlnr }}</td>
+                    <td>{{ genartnr[i].genartnr }}</td>
+                    <td> {{ dataLang1[i].bez }}</td>
+                    {%  if dataLang2[i].bez is defined %}
+                    <td> {{ dataLang2[i].bez }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+    <script>
+        document.getElementById("sheetjsexport").addEventListener('click', function() {
+            /* Create worksheet from HTML DOM TABLE */
+            let wb = XLSX.utils.table_to_book(document.getElementById("TableToExport"));
+            /* Export to file (start a download) */
+            XLSX.writeFile(wb, "Genartnr.xlsx");
+        });
+    </script>
+{% endblock %}
