@@ -268,5 +268,17 @@ class T203
         return $this;
     }
 
+    public function getDlnr(): ?string
+    {
+        return $this->dlnr;
+    }
+
+    public function setDlnr(string $dlnr): self
+    {
+        $this->dlnr = $dlnr;
+
+        return $this;
+    }
+
 
 }
