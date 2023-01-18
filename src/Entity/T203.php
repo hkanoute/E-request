@@ -24,6 +24,13 @@ class T203
     private $artnrDlnrKhernrRefnrSort;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="dlnr", type="string", length=4, nullable=false)
+     */
+    private $dlnr;
+
+    /**
      * @var string|null
      *
      * @ORM\Column(name="lkz", type="string", length=3, nullable=true)
@@ -107,7 +114,7 @@ class T203
      * @ORM\ManyToOne(targetEntity="T200")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="artnr", referencedColumnName="artnr"),
-     *   @ORM\JoinColumn(name="dlnr", referencedColumnName="dlnr")
+     *
      * })
      */
     private $artnr;
@@ -257,6 +264,18 @@ class T203
     public function setArtnr(?T200 $artnr): self
     {
         $this->artnr = $artnr;
+
+        return $this;
+    }
+
+    public function getDlnr(): ?string
+    {
+        return $this->dlnr;
+    }
+
+    public function setDlnr(string $dlnr): self
+    {
+        $this->dlnr = $dlnr;
 
         return $this;
     }

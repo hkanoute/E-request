@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="container text-center d-flex justify-content-center">
+        <div class="col-md-3 pt-5">
+            {{ form(form) }}
+            <div class="btn-group">
+                {% if data is defined and data is not null %}
+                    {% if data[0].visual_fixe is not null %}
+                        <button class="mt-3 btn btn-success" id="link_fixe">Copier le lien fixe</button>
+                    {% endif %}
+                    {% if data[0].visual_360 is not null %}
+                        <button class="mt-3 btn btn-success" id="link_360">Copier le lien 360</button>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+    {% if data is defined and data | length > 0 %}
+        <div class="container col-md-12">
+            {% for i in 0..data | length - 1 %}
+                <div class=" pt-5 mt-5 d-flex {{ data[i].visual_fixe is not null and data[i].visual_360 is not null ? 'justify-content-between' : 'justify-content-center' }}">
+                    {% if data[i].visual_fixe is not null %}
+                        <img src="{{ data[i].visual_fixe }}" alt="Image fixe de la pièce" width="">
+                    {% endif %}
+                    {% if data[i].visual_360 is not null %}
+                        <iframe src="{{ data[i].visual_360 }}" width="500px" height="500px"></iframe>
+                    {% endif %}
+                </div>
+
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let link_fixe = document.getElementById('link_fixe');
+            let link_360 = document.getElementById('link_360');
+
+            if (link_fixe !== null) {
+                link_fixe.addEventListener('click', function () {
+                    navigator.clipboard.writeText("{{ data is defined ? data[0].visual_fixe : '' }}");
+                    alert("Lien fixe copié");
+                });
+            }
+
+            if (link_360 !== null) {
+                link_360.addEventListener('click', function () {
+                    navigator.clipboard.writeText("{{ data is defined ? data[0].visual_360 : '' }}");
+                    alert("Lien 360 copié");
+                });
+            }
+        })
+    </script>
+{% endblock %}
